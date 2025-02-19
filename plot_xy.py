@@ -53,10 +53,19 @@ for i, subplot in enumerate(subplots):
     y_values = [point[1] for point in subplot['data']]
     row = (i // 2) + 1
     col = (i % 2) + 1
-    fig.add_trace(go.Scatter(x=x_values, y=y_values), row=row, col=col)
+    fig.add_trace(go.Scatter(x=x_values, y=y_values,
+        mode='markers',
+        hoverinfo='text',
+        hovertext=[f'x: {x}, y: {y}' for x, y in zip(x_values, y_values)]), row=row, col=col)
     if subplot['axis_labels']:
         fig.update_xaxes(title_text=subplot['axis_labels'][0], row=row, col=col)
         fig.update_yaxes(title_text=subplot['axis_labels'][1], row=row, col=col)
 
+fig.update_layout(hovermode='x unified')
 # Show plot
-fig.show()
+fig.write_html("plot.html",
+               include_plotlyjs="cdn",  # Use CDN for Plotly JS
+               full_html=True,  # Include HTML header and footer
+               auto_open=True  # Open HTML file in browser
+              )
+
